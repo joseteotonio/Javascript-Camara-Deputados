@@ -6,7 +6,7 @@
 This example consult the actual Deputies
 </p>
 
-<h5> All Deputies List>
+<h5> All Deputies List
 <img src="https://github.com/teonett/Javascript-Camara-Deputados/blob/master/img/deputados001.png">
 
 <h5> Resource to consulting by name or part of </h5>
