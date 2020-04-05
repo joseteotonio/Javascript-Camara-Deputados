@@ -99,30 +99,76 @@ $(document).ready(function(){
         varWindow = window.open (
         'popup.html' + '?reference=' + ref,
         'pagina',
-        "width=760, height=500, top=100, left=110, scrollbars=yes" );
+        "width=760, height=600, top=100, left=110, scrollbars=yes" );
 
         recuperaPartido(ref);
     }
 
-    function recuperaPartido(ref) {
+    function recuperaPartido(partidoId){
 
-        var xhr = new XMLHttpRequest();
-        
-        xhr.open('GET' , `${URL_BASE}"/partidos/"${ref}` , true);
+        let urlpartido = `${URL_BASE}partidos/${partidoId}`;
+        $("#gridpartido").html('');
+    
+        fetch(urlpartido).then(function(retPartido) {
+            retPartido.json().then(function(retData) {
+                
+                let sigla = retData.dados.sigla;
+                let nome = retData.dados.nome;
+                let logo = retData.dados.urlLogo;
+                let status = retData.dados.status.situacao;
+                let membros = retData.dados.status.totalMembros;
 
-        xhr.onload = function(){
-            if(this.status == 200){
+                let lider = retData.dados.status.lider.nome;
+                let estado = retData.dados.status.lider.uf;
+                let foto = retData.dados.status.lider.urlFoto;
 
-                var resultData = JSON.parse(this.responseText);
+                let geraOutput = `
+                <div class="container" style="margin-top: 110px;">
+                    <table>
+                        <tr>
+                            <td rowspan="2" style="width: 20%;">
+                                <img class="col s12 m3 responsive-img" src="${logo}" alt="${nome}">
+                            </td>
+                            <td colspan = "2" style="font-weight: bolder;font-size: 18px;text-align: center; background-color: #333; color: #ffffff;">
+                            ${sigla} - ${nome}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bolder;font-size: 18px;text-align: center;">
+                            Status: ${status}</td>
+                            <td style="font-weight: bolder;font-size: 18px;text-align: center;">
+                            Total de Mebros : ${membros}</td>
+                        </tr>
+                        <tr</tr>
+                    </table>
+                </div>
+                <div class="container">
+                    <table>
+                        <tr>
+                            <td rowspan="2" style="width: 20%;">
+                                <img class="responsive-img" src="${foto}" alt="${lider}">
+                            </td>
+                            <td style="font-weight: bolder;font-size: 18px;text-align: center; background-color: #333; color: #ffffff;">
+                                Lider do Partido</td>
+                            <td style="font-weight: bolder;font-size: 18px;text-align: center; background-color: #333; color: #ffffff;">
+                                Estado</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bolder;font-size: 18px;text-align: center;">
+                            ${lider}
+                            </td>
+                            <td style="font-weight: bolder;font-size: 18px;text-align: center;">
+                            ${estado}</td>
+                        </tr>
+                        <tr</tr>
+                    </table>
+                </div>
 
-                var output = `
-                <p>${resultData.dados.totalMembros}</p>
-                <p>${resultData.dados.uriMembros}</p>
                 `;
+            
+                $("#gridpartido").append(geraOutput);
 
-                document.getElementById('#partidos').innerHTML = output;
+            });
+        });
 
-            }
-        }
-       
     }
+
